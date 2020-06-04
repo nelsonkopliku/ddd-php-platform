@@ -1,0 +1,47 @@
+doctrine:
+    dbal:
+        default_connection: default
+        connections:
+            default:
+                schema_filter: '~^(?!messenger_messages)~'
+                url: '%env(resolve:DUMMY_DATABASE_URL)%'
+                charset: utf8mb4
+            checkout:
+                url: '%env(resolve:CHECKOUT_DATABASE_URL)%'
+                charset: utf8mb4
+        types:
+            uuid:  Ramsey\Uuid\Doctrine\UuidType
+
+        # IMPORTANT: You MUST configure your server version,
+        # either here or in the DATABASE_URL env var (see .env file)
+        #server_version: '5.7'
+    orm:
+        auto_generate_proxy_classes: true
+        default_entity_manager: default
+        entity_managers:
+            default:
+                connection: default
+                naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+                mappings:
+#                    App:
+#                        is_bundle: false
+#                        type: annotation
+#                        dir: '%kernel.project_dir%/src/Entity'
+#                        prefix: 'App\Entity'
+#                        alias: App
+                    Dummy:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/vendor/acme/dummy/src/Infrastructure/Persistence/Doctrine'
+                        prefix: 'Acme\Dummy\Domain'
+                        alias: Dummy
+            checkout:
+                connection: checkout
+                naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+                mappings:
+                    CheckoutContext:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/vendor/acme/checkout/src/Infrastructure/Persistence/Doctrine/config'
+                        prefix: 'Acme\Marketplace\Checkout\Infrastructure\Persistence\Doctrine\Entity'
+                        alias: CheckoutContext

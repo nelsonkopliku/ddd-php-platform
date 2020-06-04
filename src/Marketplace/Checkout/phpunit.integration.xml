@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+        backupGlobals="false"
+        colors="true"
+        bootstrap="../../../app/vendor/autoload.php"
+>
+    <!-- bootstrap="../../../app/vendor/autoload.php" needs to be moved to module autoloader (?) -->
+    <php>
+        <ini name="error_reporting" value="-1" />
+        <server name="APP_ENV" value="test" force="true" />
+        <server name="SHELL_VERBOSITY" value="-1" />
+        <server name="KERNEL_CLASS" value="App\Kernel" />
+        <server name="DUMMY_DATABASE_URL" value="mysql://root:root@db:3306/acme_dummy_test?serverVersion=8" />
+        <server name="CHECKOUT_DATABASE_URL" value="mysql://root:root@db:3306/acme_checkout_test?serverVersion=8" />
+    </php>
+    <testsuites>
+        <testsuite name="integration">
+            <directory>./tests/Integration</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./src</directory>
+            <exclude>
+                <directory suffix=".php">./src/Infrastructure/Persistence/Migrations</directory>
+                <directory suffix=".php">./src/Infrastructure/Persistence/DataFixtures</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>

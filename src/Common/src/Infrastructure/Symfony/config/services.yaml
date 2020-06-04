@@ -1,0 +1,29 @@
+parameters:
+
+services:
+
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    public: false
+    bind:
+      $enqueueDSN: '%env(ENQUEUE_DSN)%'
+
+  Acme\Common\:
+    resource: '../../../../src/*'
+
+  #  Acme\Common\Application\Bus\Command\CommandBus: '@Acme\Common\Application\Bus\Command\NullCommandBus'
+  Acme\Common\Application\Bus\Command\CommandBus: '@Acme\Common\Infrastructure\Bus\Command\MessengerCommandBus'
+
+  Acme\Common\Application\Bus\Event\EventBus: '@Acme\Common\Infrastructure\Bus\Event\MessageProducerEventBus'
+
+  Acme\Common\Infrastructure\Bus\Event\DomainEventMapping:
+    arguments:
+      $subscribers: !tagged acme.domain_event_subscriber
+
+  Enqueue\MessengerAdapter\MessageBusProcessor:
+    arguments:
+      - '@event.bus'
+      - '@Acme\Common\Infrastructure\Bus\Event\DomainEventSerializer'
+    tags:
+      - { name: 'enqueue.transport.processor', processor: 'bus' }

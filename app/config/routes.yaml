@@ -1,0 +1,4 @@
+checkout_controllers:
+  resource: ../vendor/acme/checkout/src/UI/Http/Rest/Action
+  type: annotation
+  prefix: '/api/checkout'

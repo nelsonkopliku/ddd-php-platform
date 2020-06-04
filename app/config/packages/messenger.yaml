@@ -1,0 +1,26 @@
+framework:
+    messenger:
+        failure_transport: failed
+        serializer:
+            default_serializer: messenger.transport.symfony_serializer
+            symfony_serializer:
+                format: json
+                context: { }
+
+        default_bus: command.bus
+        buses:
+            command.bus:
+                middleware:
+                    - Acme\Common\Infrastructure\Bus\Command\Middleware\DomainEventDispatcherMiddleware
+                    - doctrine_transaction: ['checkout']
+
+            event.bus:
+                default_middleware: allow_no_handlers
+
+            query.bus: ~
+
+        transports:
+            failed: 'doctrine://default?queue_name=failed'
+        routing:
+#             Acme\Platform\Common\Domain\Event\DomainEvent: outgoing.domain-events
+#             Acme\Platform\Common\Domain\Command\Command: sync

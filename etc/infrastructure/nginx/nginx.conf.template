@@ -1,0 +1,60 @@
+user  nginx;
+worker_processes ${WORKER_PROCESSES:-2};
+worker_rlimit_nofile ${WORKER_RLIMIT:-1024};
+
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+
+events {
+    worker_connections  ${WORKER_CONNECTIONS:-1024};
+    multi_accept on;
+    use epoll;
+}
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 65;
+    types_hash_max_size 2048;
+    server_tokens off;
+
+    proxy_buffer_size 512k;
+    proxy_buffers 8 256k;
+    proxy_busy_buffers_size 1024k;
+
+    gzip on;
+    gzip_disable "msie6";
+
+    gzip_comp_level 6;
+    gzip_min_length 1100;
+    gzip_buffers 16 8k;
+    gzip_proxied any;
+    gzip_types
+        text/plain
+        text/css
+        text/js
+        text/xml
+        text/javascript
+        application/javascript
+        application/x-javascript
+        application/json
+        application/xml
+        application/xml+rss;
+
+    log_format upstream_time '$$remote_addr - $$remote_user [$time_local] '
+         '"$$request" $$status $$body_bytes_sent '
+         '"$$http_referer" "$$http_user_agent" "$$http_x_forwarded_for" '
+         'req_time=$$request_time app_connect_time="$$upstream_connect_time" app_header_time="$$upstream_header_time" app_response_time="$$upstream_response_time"';
+
+    #log_format  main  '$$remote_addr - $$remote_user [$$time_local] "$$request" '
+    #                  '$$status $$body_bytes_sent "$$http_referer" '
+    #                  '"$$http_user_agent" "$$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access.log  upstream_time;
+
+    include /etc/nginx/conf.d/*.conf;
+}

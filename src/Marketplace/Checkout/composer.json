@@ -1,0 +1,35 @@
+{
+    "name": "acme/checkout",
+    "description": "Acmes's Checkout Service",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Acme\\Marketplace\\Checkout\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Acme\\Marketplace\\Checkout\\Tests\\": "tests"
+        }
+    },
+    "require": {
+        "acme/common": "*"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "./../../Common"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require-dev": {
+        "phpunit/phpunit": "^9.0",
+        "behat/behat": "^3.6",
+        "matthiasnoback/behat-expect-exception": "^0.3.0",
+        "jangregor/phpstan-prophecy": "^0.6.2",
+        "phpstan/extension-installer": "^1.0",
+        "phpstan/phpstan": "^0.12.17",
+        "vimeo/psalm": "^3.10"
+    }
+}

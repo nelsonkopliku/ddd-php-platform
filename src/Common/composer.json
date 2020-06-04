@@ -1,0 +1,19 @@
+{
+    "name": "acme/common",
+    "description": "Acme's Platform Common Tools",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Acme\\Common\\": "src/"
+        }
+    },
+    "require": {
+        "doctrine/orm": "^2.7",
+        "enqueue/amqp-lib": "^0.10.1",
+        "webmozart/assert": "^1.6",
+        "ramsey/uuid": "^3.9",
+        "ramsey/uuid-doctrine": "^1.6",
+        "sroze/messenger-enqueue-transport": "^0.5.0",
+        "symfony/messenger": "^5.0"
+    }
+}

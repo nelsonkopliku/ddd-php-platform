@@ -1,0 +1,10 @@
+{
+    "name": "acme/dummy",
+    "description": "Acme's Dummy Context",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Acme\\Dummy\\": "src/"
+        }
+    }
+}

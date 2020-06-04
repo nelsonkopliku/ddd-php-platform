@@ -1,0 +1,94 @@
+steps:
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'pull-platform-image'
+    entrypoint: 'bash'
+    args: [
+      '-c',
+      'docker pull eu.gcr.io/$PROJECT_ID/acme-platform-core:latest || exit 0'
+    ]
+    waitFor: ['-']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'pull-platform-nginx-image'
+    entrypoint: 'bash'
+    args: [
+      '-c',
+      'docker pull eu.gcr.io/$PROJECT_ID/acme-platform-nginx:latest || exit 0'
+    ]
+    waitFor: ['-']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build-platform-core-image'
+    args: [
+      'build',
+      '-t', 'eu.gcr.io/$PROJECT_ID/acme-platform-core:latest',
+      '-t', 'eu.gcr.io/$PROJECT_ID/acme-platform-core:$BRANCH_NAME-$SHORT_SHA',
+      '--cache-from', 'eu.gcr.io/$PROJECT_ID/acme-platform-core:latest',
+      '.'
+    ]
+    waitFor: ['pull-platform-image']
+
+  # Build nginx gateway
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build-platform-nginx-image'
+    args: [
+      'build',
+      '-f', 'etc/infrastructure/nginx/Dockerfile',
+      '-t', 'eu.gcr.io/$PROJECT_ID/acme-platform-nginx:latest',
+      '-t', 'eu.gcr.io/$PROJECT_ID/acme-platform-nginx:$BRANCH_NAME-$SHORT_SHA',
+      '--cache-from', 'eu.gcr.io/$PROJECT_ID/acme-platform-nginx:latest',
+      '.'
+    ]
+    waitFor: ['pull-platform-nginx-image']
+
+  # Start a database instance (for Tests)
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'start-test-db'
+    entrypoint: 'bash'
+    args: [
+      '-c',
+      'docker run --name test-database -d -v `pwd`/etc/infrastructure/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d -e "MYSQL_USER=acme" -e "MYSQL_PASSWORD=acme" -e "MYSQL_ROOT_PASSWORD=root"  mysql:8'
+    ]
+    waitFor: ['-']
+
+  ######################################################################################################################
+
+  ### Marketplace.Checkout
+
+  # Checkout Pipeline
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'acme.platform.marketplace.checkout'
+    entrypoint: 'bash'
+    args: [
+      '-c',
+      'docker run --link test-database:db eu.gcr.io/$PROJECT_ID/acme-platform-core:$BRANCH_NAME-$SHORT_SHA make prep'
+    ]
+    waitFor: ['build-platform-core-image', 'start-test-db']
+
+  ######################################################################################################################
+
+  # Build Production image
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build-platform-core-image:prod'
+    args: [
+      'build',
+      '-t', 'eu.gcr.io/$PROJECT_ID/acme-platform-core:latest',
+      '-t', 'eu.gcr.io/$PROJECT_ID/acme-platform-core:$BRANCH_NAME-$SHORT_SHA',
+      '--target', 'php_build',
+      '--cache-from', 'eu.gcr.io/$PROJECT_ID/acme-platform-core:latest',
+      '.'
+    ]
+    waitFor: ['acme.platform.marketplace.checkout']
+
+#timeout: 3000s
+
+tags:
+  - "cloudbuild"
+
+images: [
+  'eu.gcr.io/$PROJECT_ID/acme-platform-core:latest',
+  'eu.gcr.io/$PROJECT_ID/acme-platform-nginx:latest',
+  'eu.gcr.io/$PROJECT_ID/acme-platform-nginx:$BRANCH_NAME-$SHORT_SHA',
+  'eu.gcr.io/$PROJECT_ID/acme-platform-core:$BRANCH_NAME-$SHORT_SHA'
+]

@@ -1,0 +1,45 @@
+parameters:
+
+services:
+
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    public: false
+    bind:
+      $enqueueDSN: '%env(ENQUEUE_DSN)%'
+
+  _instanceof:
+
+    Acme\Common\Infrastructure\Persistence\DataFixtures\Fixture:
+      tags:
+        - 'doctrine.fixture.orm'
+
+    Acme\Common\Domain\Event\DomainEventSubscriber:
+      tags:
+        - 'acme.checkout.domain_event_subscriber'
+        - 'acme.domain_event_subscriber'
+        - { name: 'messenger.message_handler', bus: 'event.bus', from_transport: 'incoming.domain-events' }
+
+    Acme\Common\Application\Bus\Command\CommandHandler:
+      tags:
+        - 'acme.checkout.command_handler'
+        - 'acme.command_handler'
+        - { name: 'messenger.message_handler', bus: 'command.bus', from_transport: 'sync' }
+
+  Acme\Marketplace\Checkout\:
+    resource: '../../../../src/*'
+
+  Acme\Marketplace\Checkout\UI\Http\Rest\Action\:
+    resource: '../../../../src/UI/Http/Rest/Action'
+    tags: ['controller.service_arguments']
+
+  Acme\Marketplace\Checkout\Infrastructure\Persistence\DoctrineCheckoutRepository:
+    arguments:
+      - '@doctrine'
+
+  Acme\Marketplace\Checkout\Domain\Repository\CheckoutRepository: '@Acme\Marketplace\Checkout\Infrastructure\Persistence\DoctrineCheckoutRepository'
+
+  Acme\Marketplace\Checkout\Infrastructure\Persistence\DoctrineCheckoutReadRepository:
+    arguments:
+      - '@doctrine'

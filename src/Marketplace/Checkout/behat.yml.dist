@@ -1,0 +1,8 @@
+default:
+    suites:
+        default:
+            contexts:
+                - 'CheckoutContext'
+                - 'ProposalSubmissionContext'
+                - 'AgreementSubmissionContext'
+                - 'NoShowContext'

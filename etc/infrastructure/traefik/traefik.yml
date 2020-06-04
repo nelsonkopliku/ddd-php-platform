@@ -1,0 +1,70 @@
+providers:
+  ## duration that Traefik waits for, after a configuration reload, before taking into account any new configuration refresh event
+  # providersThrottleDuration: 10s
+
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+
+    # =====================================================================
+
+    # useBindPortIP
+
+    # Traefik routes requests to the IP/Port of the matching container.
+    # When setting useBindPortIP=true, you tell Traefik to use the IP/Port attached to the container's binding instead of its inner network IP/Port.
+    # When used in conjunction with `traefik.http.services.<name>.loadbalancer.server.port` label
+    # (that tells Traefik to route requests to a specific port),
+    # Traefik tries to find a binding on port `traefik.http.services.<name>.loadbalancer.server.port`.
+    # If it can't find such a binding, Traefik falls back on the internal network IP of the container,
+    # but still uses the `traefik.http.services.<name>.loadbalancer.server.port` that is set in the label.
+
+    #useBindPortIP: false
+
+    # =====================================================================
+
+    # exposedByDefault
+
+    # Expose containers by default through Traefik.
+    # If set to false, containers that don't have a `traefik.enable=true` label will be ignored from the resulting routing configuration.
+
+    #exposedByDefault: true
+
+    # =====================================================================
+
+    # constraints
+
+    # Constraints is an expression that Traefik matches against the container's labels to determine whether to create any route for that container.
+    # That is to say, if none of the container's labels match the expression, no route for the container is created.
+    # If the expression is empty, all detected containers are included.
+    # The expression syntax is based on the Label("key", "value"), and LabelRegex("key", "value") functions, as well as the usual boolean logic, as shown in examples below.
+
+    # Examples:
+
+    #   Includes only containers having a label with key `a.label.name` and value `foo`
+    #   constraints = "Label(`a.label.name`, `foo`)"
+
+    # Excludes containers having any label with key `a.label.name` and value `foo`
+    # constraints = "!Label(`a.label.name`, `value`)"
+
+    # With logical AND.
+    # constraints = "Label(`a.label.name`, `valueA`) && Label(`another.label.name`, `valueB`)"
+
+    # With logical OR.
+    # constraints = "Label(`a.label.name`, `valueA`) || Label(`another.label.name`, `valueB`)"
+
+    # With logical AND and OR, with precedence set by parentheses.
+    # constraints = "Label(`a.label.name`, `valueA`) && (Label(`another.label.name`, `valueB`) || Label(`yet.another.label.name`, `valueC`))"
+
+    # Includes only containers having a label with key `a.label.name` and a value matching the `a.+` regular expression.
+    # constraints = "LabelRegex(`a.label.name`, `a.+`)"
+
+    #constraints: "Label(`a.label.name`,`foo`)"
+
+    # =====================================================================
+    defaultRule: "Host(`{{ trimPrefix `/` .Name }}.docker.localhost`)"
+    #defaultRule: "Host(`{{ .Name }}.{{ index .Labels \"customLabel\"}}`)"
+
+    # =====================================================================
+
+# API and dashboard configuration
+api:
+  insecure: true

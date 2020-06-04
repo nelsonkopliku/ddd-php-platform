@@ -1,0 +1,5 @@
+name: "Checkout Migrations"
+migrations_namespace: "Acme\\Marketplace\\Checkout\\Infrastructure\\Persistence\\Migrations"
+table_name: "checkout_migrations"
+migrations_directory: "../"
+all_or_nothing: true

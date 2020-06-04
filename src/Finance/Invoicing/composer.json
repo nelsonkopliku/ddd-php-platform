@@ -1,0 +1,10 @@
+{
+    "name": "acme/invoicing",
+    "description": "Acme's Invoicing Context",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Acme\\Finance\\Invoicing\\": "src"
+        }
+    }
+}

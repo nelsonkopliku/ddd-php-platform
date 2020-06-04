@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Acme\Marketplace\Checkout\Infrastructure\Persistence\Doctrine\Entity\Proposal" table="proposal">
+
+        <id name="id" type="uuid" column="id" length="36">
+            <generator strategy="CUSTOM"/>
+            <custom-id-generator class="Ramsey\Uuid\Doctrine\UuidGenerator"/>
+        </id>
+
+        <field name="workedFrom" type="datetime_immutable" column="worked_from" />
+        <field name="workedUntil" type="datetime_immutable" column="worked_until" />
+        <field name="minutesBreak" type="integer" column="minutes_break" />
+        <field name="compensation" type="string" column="compensation" />
+        <field name="proposedBy" type="string" column="proposed_by" />
+        <field name="proposedAt" type="datetime_immutable" column="proposed_at" />
+
+        <many-to-one
+            field="checkout"
+            target-entity="Acme\Marketplace\Checkout\Infrastructure\Persistence\Doctrine\Entity\Checkout"
+            inversed-by="proposals">
+        </many-to-one>
+
+    </entity>
+
+</doctrine-mapping>
