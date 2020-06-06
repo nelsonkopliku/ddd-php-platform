@@ -19,7 +19,7 @@ services:
 
   Acme\Common\Infrastructure\Bus\Event\DomainEventMapping:
     arguments:
-      $subscribers: !tagged acme.domain_event_subscriber
+      $subscribers: !tagged_iterator acme.domain_event_subscriber
 
   Enqueue\MessengerAdapter\MessageBusProcessor:
     arguments:
