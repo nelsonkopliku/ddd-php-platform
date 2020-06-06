@@ -108,7 +108,7 @@ checkout-unit-tests: #install-checkout-deps
 checkout-behavior-tests: #install-checkout-deps
 	$(call exec, ${MODULES["checkout"]["root"]}, ./vendor/bin/behat)
 
-checkout-integration-tests: # install-checkout-deps install-platform-deps
+checkout-integration-tests: create-test-databases # install-checkout-deps install-platform-deps
 	$(call exec, ${PLATFORM_RUNTIME_ROOT}, ./bin/console doctrine:database:drop -e test --connection checkout --force --if-exists)
 	$(call exec, ${PLATFORM_RUNTIME_ROOT}, ./bin/console doctrine:database:create -e test --connection checkout)
 	$(call exec, ${PLATFORM_RUNTIME_ROOT}, ./bin/console doctrine:schema:create -e test --em checkout)
@@ -122,3 +122,7 @@ checkout-tests: checkout-unit-tests checkout-behavior-tests checkout-integration
 consume-domain-events:
 	$(call exec, ${PLATFORM_RUNTIME_ROOT}/bin/console enqueue:setup-broker) # to be moved at broker level
 	$(call exec, ${PLATFORM_RUNTIME_ROOT}/bin/console enqueue:transport:consume bus acme.platform.domain-events)
+
+create-test-databases:
+	$(call exec, ${PLATFORM_RUNTIME_ROOT}, ./bin/console doctrine:database:drop -e test --force --if-exists)
+	$(call exec, ${PLATFORM_RUNTIME_ROOT}, ./bin/console doctrine:database:create -e test)
