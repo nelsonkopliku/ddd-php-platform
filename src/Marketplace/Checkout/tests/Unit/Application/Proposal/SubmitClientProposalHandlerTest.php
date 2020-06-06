@@ -13,9 +13,12 @@ use Acme\Marketplace\Checkout\Domain\Command\SubmitClientProposal;
 use Acme\Marketplace\Checkout\Domain\Event\ProposalWasSubmittedByClient;
 use Acme\Marketplace\Checkout\Tests\Unit\Domain\Dummy\CheckoutDummy;
 use Acme\Marketplace\Checkout\Tests\Unit\Domain\Dummy\ProposalDummy;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 final class SubmitClientProposalHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      */

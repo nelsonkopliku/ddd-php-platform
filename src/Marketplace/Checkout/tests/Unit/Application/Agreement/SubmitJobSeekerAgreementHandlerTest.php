@@ -11,9 +11,12 @@ use Acme\Marketplace\Checkout\Domain\Checkout;
 use Acme\Marketplace\Checkout\Domain\Repository\CheckoutRepository;
 use Acme\Marketplace\Checkout\Domain\Command\SubmitJobSeekerAgreement;
 use Acme\Marketplace\Checkout\Tests\Unit\Domain\Dummy\CheckoutDummy;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 final class SubmitJobSeekerAgreementHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      */

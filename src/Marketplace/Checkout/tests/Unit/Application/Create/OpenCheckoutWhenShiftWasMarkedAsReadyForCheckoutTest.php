@@ -10,9 +10,12 @@ use Acme\Common\Application\Bus\Command\CommandBus;
 use Acme\Marketplace\Checkout\Application\Create\OpenCheckoutWhenShiftWasMarkedAsReadyForCheckout;
 use Acme\Marketplace\Checkout\Domain\Command\OpenCheckout;
 use Acme\Marketplace\Checkout\Domain\Event\ShiftWasMarkedAsReadyForCheckout;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 final class OpenCheckoutWhenShiftWasMarkedAsReadyForCheckoutTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      */

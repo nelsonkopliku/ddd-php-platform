@@ -14,9 +14,12 @@ use Acme\Marketplace\Checkout\Domain\Command\OpenCheckout;
 use Acme\Marketplace\Checkout\Domain\ValueObject\CheckoutId;
 use Acme\Marketplace\Checkout\Domain\ValueObject\Parties;
 use Acme\Marketplace\Checkout\Domain\ValueObject\StartedShift;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 final class OpenCheckoutHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      */

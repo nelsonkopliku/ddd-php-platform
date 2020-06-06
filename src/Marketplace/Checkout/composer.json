@@ -30,6 +30,7 @@
         "jangregor/phpstan-prophecy": "^0.6.2",
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.12.17",
-        "vimeo/psalm": "^3.10"
+        "vimeo/psalm": "^3.10",
+        "phpspec/prophecy-phpunit": "^2.0"
     }
 }

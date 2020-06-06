@@ -14,6 +14,9 @@ use Webmozart\Assert\Assert;
 
 abstract class DoctrineAggregateRepository extends AggregateRepository
 {
+    /**
+     * @var class-string
+     */
     protected static string $entityClass;
 
     /**

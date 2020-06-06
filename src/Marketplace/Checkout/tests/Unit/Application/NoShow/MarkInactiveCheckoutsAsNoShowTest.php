@@ -13,9 +13,11 @@ use Acme\Marketplace\Checkout\Domain\Command\MarkJobSeekerAsNoShow;
 use Acme\Marketplace\Checkout\Domain\Repository\InactiveCheckoutRepository;
 use Acme\Marketplace\Checkout\Domain\ValueObject\CheckoutId;
 use Acme\Marketplace\Checkout\Tests\Unit\Domain\Dummy\CheckoutDummy;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 final class MarkInactiveCheckoutsAsNoShowTest extends TestCase
 {
+    use ProphecyTrait;
     /**
      * @test
      * @dataProvider provideInactiveCheckouts

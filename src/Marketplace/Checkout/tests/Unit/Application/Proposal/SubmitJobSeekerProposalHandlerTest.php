@@ -12,9 +12,12 @@ use Acme\Marketplace\Checkout\Domain\Repository\CheckoutRepository;
 use Acme\Marketplace\Checkout\Domain\Command\SubmitJobSeekerProposal;
 use Acme\Marketplace\Checkout\Tests\Unit\Domain\Dummy\CheckoutDummy;
 use Acme\Marketplace\Checkout\Tests\Unit\Domain\Dummy\ProposalDummy;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 final class SubmitJobSeekerProposalHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      */
